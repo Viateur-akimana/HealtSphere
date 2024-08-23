@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "HealthSphere",
   description: "This is an patient management and appoint system",
+  icons:{
+    icon:"/logo.jpg"
+  }
 };
 
 export default function RootLayout({
