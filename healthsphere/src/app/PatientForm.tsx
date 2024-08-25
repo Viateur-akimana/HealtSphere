@@ -15,6 +15,10 @@ import { Input } from "@/components/ui/input"
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { Mail } from "lucide-react" // Import icon from lucide-react
+import SubmitButton from '@/components/SubmitButton'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { log } from 'console'
 
 const formSchema = z.object({
  username: z.string().min(2, {
@@ -26,20 +30,35 @@ const formSchema = z.object({
  })
 })
 
-const form = useForm<z.infer<typeof formSchema>>({
- resolver: zodResolver(formSchema),
- defaultValues: {
-   username: "",
-   email: "",
-   phoneNumber: ""
- },
-})
 
-const handleSubmit = (values: z.infer<typeof formSchema>) => {
- console.log({ values });
-};
+
 
 const PatientForm = () => {
+  const Router = useRouter()
+  const [isLoading, setIsLoading]= useState(false)
+
+const form = useForm<z.infer<typeof formSchema>>({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    username: "",
+    email: "",
+    phoneNumber: ""
+  },
+ })
+ async function handleSubmit({username,email,phoneNumber}: z.infer<typeof formSchema>){
+  setIsLoading(true);
+  try {
+    // const userData = {username,email,phoneNumber}
+    // const user = await createUser(userData);
+    // if (user) {
+    //   Router.push(`/patients/${user.id}/register`);
+    // }
+  } catch (error) {
+    console.log(error);
+    
+  }
+ 
+};
  return (
    <Form {...form}>
      <form onSubmit={form.handleSubmit(handleSubmit)} className=''>
@@ -113,7 +132,7 @@ const PatientForm = () => {
            );
          }}
        />
-       <Button className='' type='submit'>Get started</Button>
+       <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
      </form>
    </Form>
  )
