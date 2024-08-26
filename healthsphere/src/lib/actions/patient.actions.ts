@@ -1,11 +1,6 @@
 import { ID, Query } from "node-appwrite"
 import { users } from "../appwrite.config"
 
-declare interface CreateUserParams {
-    name: string;
-    email: string;
-    phone: string;
-  }
 
 export const createUser = async(user:CreateUserParams) => {
     try {
