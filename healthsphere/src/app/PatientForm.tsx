@@ -1,7 +1,6 @@
 'use client'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
-import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
  Form,
@@ -18,14 +17,14 @@ import { Mail } from "lucide-react" // Import icon from lucide-react
 import SubmitButton from '@/components/SubmitButton'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { log } from 'console'
+import { createUser } from '@/lib/actions/patient.actions'
 
 const formSchema = z.object({
- username: z.string().min(2, {
-   message: "The username must contain at least 2 characters"
+ name: z.string().min(2, {
+   message: "The name must contain at least 2 characters"
  }).max(50),
  email: z.string().email(),
- phoneNumber: z.string().min(5, {
+ phone: z.string().min(5, {
    message: "Phone number should have at least 5 characters"
  })
 })
@@ -40,19 +39,19 @@ const PatientForm = () => {
 const form = useForm<z.infer<typeof formSchema>>({
   resolver: zodResolver(formSchema),
   defaultValues: {
-    username: "",
+    name: "",
     email: "",
-    phoneNumber: ""
+    phone: ""
   },
  })
- async function handleSubmit({username,email,phoneNumber}: z.infer<typeof formSchema>){
+ async function handleSubmit({name,email,phone}: z.infer<typeof formSchema>){
   setIsLoading(true);
   try {
-    // const userData = {username,email,phoneNumber}
-    // const user = await createUser(userData);
-    // if (user) {
-    //   Router.push(`/patients/${user.id}/register`);
-    // }
+    const userData = { name,email,phone}
+    const user = await createUser(userData);
+    if (user) {
+      Router.push(`/patients/${user.id}/register`);
+    }
   } catch (error) {
     console.log(error);
     
@@ -64,7 +63,7 @@ const form = useForm<z.infer<typeof formSchema>>({
      <form onSubmit={form.handleSubmit(handleSubmit)} className=''>
        <FormField
          control={form.control}
-         name="username"
+         name="name"
          render={({ field }) => {
            return (
              <FormItem>
@@ -108,7 +107,7 @@ const form = useForm<z.infer<typeof formSchema>>({
        />
        <FormField
          control={form.control}
-         name="phoneNumber"
+         name="phone"
          render={({ field }) => {
            return (
              <FormItem>
@@ -119,7 +118,7 @@ const form = useForm<z.infer<typeof formSchema>>({
                    value={field.value}
                    onChange={field.onChange}
                    inputProps={{
-                     name: 'phoneNumber',
+                     name: 'phone',
                      required: true,
                      autoFocus: false,
                    }}
